@@ -1,7 +1,11 @@
 import type { LanguageModelCallOptions } from 'ai'
 
-import { REASONING_EFFORTS } from '@open-pencil/core/constants'
-import type { AIProviderID, ReasoningEffort } from '@open-pencil/core/constants'
+import { MODEL_REASONING_LEVELS, REASONING_EFFORTS } from '@open-pencil/core/constants'
+import type {
+  AIProviderID,
+  ModelReasoningLevel,
+  ReasoningEffort
+} from '@open-pencil/core/constants'
 
 import type { DirectAIModelRuntime } from '@/app/ai/models/runtime'
 import type { ThinkingLevel } from '@/app/ai/models/types'
@@ -21,21 +25,29 @@ function raisedLevel(level: ThinkingLevel, minEffort: ReasoningEffort | undefine
 }
 
 /**
- * The closest level a model accepts: Off and lower levels use its lowest effort, higher ones its
- * highest. A model whose full list is unknown keeps whatever was chosen.
+ * The closest level a model accepts. A model that lists `off` may be turned off; otherwise lower
+ * levels rise to its lowest effort. A level between two listed ones takes the nearer, and a tie
+ * takes the cheaper lower one.
  */
 export function clampThinkingLevel(
   level: ThinkingLevel,
-  efforts: readonly ReasoningEffort[] | undefined
+  efforts: readonly ModelReasoningLevel[] | undefined
 ): ThinkingLevel {
-  if (!efforts?.length || level === 'default') return level
-  const lowest = efforts[0]
-  const highest = efforts[efforts.length - 1]
-  if (level === 'off') return lowest
-  const index = REASONING_EFFORTS.indexOf(level)
-  if (index < REASONING_EFFORTS.indexOf(lowest)) return lowest
-  if (index > REASONING_EFFORTS.indexOf(highest)) return highest
-  return efforts.includes(level) ? level : lowest
+  if (!efforts?.length) return level
+  if (level === 'default') return level
+  if (efforts.includes(level)) return level
+
+  const target = MODEL_REASONING_LEVELS.indexOf(level)
+  let closest = efforts[0]
+  let closestDistance = Number.POSITIVE_INFINITY
+  for (const effort of efforts) {
+    const distance = Math.abs(MODEL_REASONING_LEVELS.indexOf(effort) - target)
+    if (distance < closestDistance) {
+      closest = effort
+      closestDistance = distance
+    }
+  }
+  return closest
 }
 
 /**
@@ -48,7 +60,7 @@ export function reasoningCallSettings(
   providerID: AIProviderID,
   level: ThinkingLevel,
   minEffort?: ReasoningEffort,
-  efforts?: readonly ReasoningEffort[]
+  efforts?: readonly ModelReasoningLevel[]
 ): ReasoningCallSettings {
   const effective = efforts?.length
     ? clampThinkingLevel(level, efforts)

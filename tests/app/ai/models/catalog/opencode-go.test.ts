@@ -43,6 +43,37 @@ describe('normalizeOpenCodeGoModel', () => {
     expect(normalizeOpenCodeGoModels([{ id: 'a' }, {}, null, 'text'])).toHaveLength(1)
   })
 
+  test('reads the shape Go reports, including its own effort names', () => {
+    expect(
+      normalizeOpenCodeGoModel({
+        id: 'deepseek-v4.1-flash',
+        name: 'DeepSeek V4.1 Flash',
+        type: 'chat',
+        modalities: { input: ['text', 'image/png'], output: ['text'] },
+        capabilities: {
+          tools: { supported: true },
+          reasoning: { supported: true, effort: ['low', 'high', 'max'] }
+        },
+        limit: { context: 1_000_000, output: 384_000 }
+      })
+    ).toMatchObject({
+      capabilities: ['tools', 'vision'],
+      efforts: ['low', 'high', 'xhigh'],
+      recommendedMaxOutputTokens: 128_000
+    })
+  })
+
+  test('keeps off when a model accepts it, and skips models a profile cannot run', () => {
+    expect(
+      normalizeOpenCodeGoModel({
+        id: 'glm-5.3',
+        type: 'chat',
+        capabilities: { reasoning: { supported: true, effort: ['none', 'high'] } }
+      })
+    ).toMatchObject({ efforts: ['off', 'high'] })
+    expect(normalizeOpenCodeGoModel({ id: 'image-model', type: 'image' })).toBeNull()
+  })
+
   test('reads efforts from the reasoning field as well', () => {
     expect(
       normalizeOpenCodeGoModel({

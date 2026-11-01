@@ -114,7 +114,9 @@ export function isOnboardingAgent(providerID: string): boolean {
 
 /** Access that only the desktop app can use. */
 export function needsDesktop(providerID: string): boolean {
+  const desktopOnly = AI_PROVIDERS.find((provider) => provider.id === providerID)?.desktopOnly
   return (
+    desktopOnly === true ||
     isOnboardingAgent(providerID) ||
     (ONBOARDING_SUBSCRIPTIONS as readonly string[]).includes(providerID)
   )

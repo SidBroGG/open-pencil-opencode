@@ -3,7 +3,7 @@ import { createUIMessageStream, DirectChatTransport, stepCountIs, ToolLoopAgent 
 import type { ChatTransport, LanguageModel, ToolExecutionOptions, UIMessage } from 'ai'
 import { toMerged } from 'es-toolkit'
 
-import type { AIProviderID, ReasoningEffort } from '@open-pencil/core/constants'
+import type { AIProviderID, ModelReasoningLevel, ReasoningEffort } from '@open-pencil/core/constants'
 
 import { resumableTransport } from '@/app/ai/chat/history/continuation'
 import { maxAgentSteps } from '@/app/ai/chat/preferences'
@@ -38,7 +38,7 @@ export type ToolLoopTransportOptions = {
   model: LanguageModel
   effectiveModelID: string
   minReasoningEffort?: ReasoningEffort
-  efforts?: readonly ReasoningEffort[]
+  efforts?: readonly ModelReasoningLevel[]
   maxOutputTokens: number
   /** Read per request, so the composer's level applies to the next message. */
   thinkingLevel: () => ThinkingLevel
@@ -59,7 +59,7 @@ function callSettings(
   cacheOptions: AIProviderOptions | undefined,
   thinkingLevel: ThinkingLevel,
   minReasoningEffort: ReasoningEffort | undefined,
-  efforts: readonly ReasoningEffort[] | undefined
+  efforts: readonly ModelReasoningLevel[] | undefined
 ) {
   const { reasoning, providerOptions } = reasoningCallSettings(
     providerID,

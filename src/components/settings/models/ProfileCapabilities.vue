@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import type { ReasoningEffort } from '@open-pencil/core/constants'
+import type { ModelReasoningLevel } from '@open-pencil/core/constants'
 import { useI18n } from '@open-pencil/vue/i18n'
 
 import type { AIModelCapability, HarnessPermissionMode, ThinkingLevel } from '@/app/ai/models'
@@ -30,7 +30,7 @@ const {
   capabilities: AIModelCapability[]
   outputTokens: number
   /** The efforts the model accepts, when its catalog lists them. */
-  efforts?: readonly ReasoningEffort[]
+  efforts?: readonly ModelReasoningLevel[]
   /** The provider takes a thinking level. */
   thinking?: boolean
   /** The model runs through the Pi companion, which asks which tools it may use. */

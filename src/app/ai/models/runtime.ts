@@ -1,7 +1,7 @@
 import type { LanguageModel } from 'ai'
 import { ref } from 'vue'
 
-import type { ReasoningEffort } from '@open-pencil/core/constants'
+import type { ModelReasoningLevel, ReasoningEffort } from '@open-pencil/core/constants'
 
 import { createLanguageModel, resolveLanguageModelID } from '@/app/ai/models/language-model'
 import { resolveProviderModel } from '@/app/ai/models/reasoning/floors'
@@ -23,8 +23,8 @@ export type DirectAIModelRuntime = {
   role: ResolvedAIModelRole
   model: LanguageModel
   minReasoningEffort?: ReasoningEffort
-  /** Every effort the model accepts, when its provider lists more than the floor. */
-  efforts?: readonly ReasoningEffort[]
+  /** Every level the model accepts, when its provider lists more than the floor. */
+  efforts?: readonly ModelReasoningLevel[]
 }
 
 export type ACPModelRuntime = {

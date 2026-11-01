@@ -76,7 +76,7 @@ In the Chat settings beside the model overview, choose whether reasoning is **Co
 
 No backend — your key or sign-in talks directly to the provider. Browser requests are subject to each provider's CORS policy, and model deployments vary in how reliably they stream tool calls. See [BYOK provider and model compatibility](./byok-provider-compatibility) for measured results and reproduction steps.
 
-**OpenCode Go** lists its current models live and offers each one the reasoning efforts it accepts, so a model that supports only some levels shows only those.
+**OpenCode Go** lists its current models live and offers each one the reasoning efforts it accepts, so a model that supports only some levels shows only those. It sends no CORS headers, so only the desktop app offers it.
 
 **ChatGPT** uses your ChatGPT plan instead of an API key, through the same backend and sign-in as OpenAI's Codex CLI. Signing in opens the browser and returns to the desktop app on `localhost:1455`, the only address OpenAI accepts for it, so close a running `codex login` first. The sign-in is stored like a key and refreshes itself; the model list comes from your account. The browser app does not offer it.
 

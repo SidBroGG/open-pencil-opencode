@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 
-import { REASONING_EFFORTS } from '@open-pencil/core/constants'
+import { MODEL_REASONING_LEVELS, REASONING_EFFORTS } from '@open-pencil/core/constants'
 import type { ModelOption } from '@open-pencil/core/constants'
 
 /** A model list as the app caches it after normalizing a provider's own catalog. */
@@ -14,6 +14,6 @@ export const modelOptionsSchema = v.array(
     releaseDate: v.optional(v.string()),
     status: v.optional(v.picklist(['active', 'beta', 'deprecated'])),
     minReasoningEffort: v.optional(v.picklist(REASONING_EFFORTS)),
-    efforts: v.optional(v.array(v.picklist(REASONING_EFFORTS)))
+    efforts: v.optional(v.array(v.picklist(MODEL_REASONING_LEVELS)))
   })
 ) satisfies v.GenericSchema<unknown, ModelOption[]>

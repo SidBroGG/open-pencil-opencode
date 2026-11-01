@@ -33,6 +33,7 @@ Whether the **web build** can reach the provider at all. The desktop build bypas
 | Anthropic            | `https://api.anthropic.com`                       | ✅      | Requires `anthropic-dangerous-direct-browser-access: true`; OpenPencil sends it in the web app | 2026-07-30 |
 | Scaleway             | `https://api.scaleway.ai/<project-id>/v1`         | ⚠️      | `ACAO: *` on success, **absent on errors** — a bad key reads as a network failure              | 2026-07-31 |
 | TensorX              | `https://api.tensorx.ai/v1`                       | ⚠️      | `ACAO: *` on success, **absent on errors** (401/403/500). Reported to their support            | 2026-07-31 |
+| OpenCode Go          | `https://opencode.ai/inference/go`                | ❌      | `OPTIONS` answers 404 without `ACAO`, and 400/401 responses carry none either                 | 2026-11-01 |
 
 ### The common failure
 

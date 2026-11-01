@@ -80,6 +80,14 @@ describe('opencode go adapter', () => {
     expect(request.headers.authorization).toBe('Bearer oc_sk-test')
   })
 
+  test('routes each conversation under its own session header', async () => {
+    const first = await capturedRequest('deepseek-v4.1-flash')
+    const second = await capturedRequest('deepseek-v4.1-flash')
+
+    expect(first.headers['x-opencode-session']).toMatch(/^ses_[0-9a-f]+$/)
+    expect(second.headers['x-opencode-session']).not.toBe(first.headers['x-opencode-session'])
+  })
+
   test('sends GPT models to the Responses endpoint', async () => {
     const request = await capturedRequest('gpt-6-luna', 'high')
 

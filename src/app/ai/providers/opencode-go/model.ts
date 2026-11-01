@@ -1,3 +1,5 @@
+import { randomHex } from '@open-pencil/scene-graph/random'
+
 /**
  * OpenCode Go serves its whole catalog from one base URL and translates a request to the API the
  * model speaks natively. Requests still go to that API, because a translated reasoning stream can
@@ -8,8 +10,17 @@ export const OPENCODE_GO_BASE_URL = 'https://opencode.ai/inference/go'
 export const OPENCODE_GO_OPENAI_BASE_URL = `${OPENCODE_GO_BASE_URL}/openai/v1`
 export const OPENCODE_GO_ANTHROPIC_BASE_URL = `${OPENCODE_GO_BASE_URL}/anthropic/v1`
 
-export type OpenCodeGoProtocol = 'chat' | 'responses' | 'messages'
+/**
+ * Go routes and caches by conversation, so it rejects a request without this header as
+ * `MissingSessionID`. One ID per chat keeps its routing and prompt cache stable.
+ */
+export const OPENCODE_GO_SESSION_HEADER = 'x-opencode-session'
 
+export function opencodeGoSessionID(): string {
+  return `ses_${randomHex(16)}`
+}
+
+export type OpenCodeGoProtocol = 'chat' | 'responses' | 'messages'
 /** Claude, Qwen3.7/3.8, and MiniMax M3 are served natively as Anthropic Messages. */
 const ANTHROPIC_FAMILY = /^(claude-|qwen3\.[78]-)/
 

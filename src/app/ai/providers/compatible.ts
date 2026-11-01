@@ -15,10 +15,13 @@ type OpenAICompatibleOptions = {
   baseURL?: CompatibleEndpoint
   /** `configurable` follows the profile's API type, so a server offers both endpoints. */
   mode?: 'default' | 'chat' | 'responses' | 'configurable'
+  /** Sent with every request, for a provider that asks for a routing header. */
+  headers?: Record<string, string>
 }
 
 type AnthropicCompatibleOptions = {
   baseURL?: CompatibleEndpoint
+  headers?: Record<string, string>
 }
 
 function resolveEndpoint(endpoint: CompatibleEndpoint | undefined, config: ModelConfig) {
@@ -33,6 +36,7 @@ export function createOpenAICompatibleAdapter(
       const provider = createOpenAI({
         apiKey: config.apiKey,
         baseURL: resolveEndpoint(options.baseURL, config),
+        headers: options.headers,
         fetch: runtime.fetch
       })
       const modelID = config.customModelID.trim() || config.modelID
@@ -53,11 +57,13 @@ export function createAnthropicCompatibleAdapter(
 ): ModelProviderAdapter {
   return {
     create(config, runtime) {
+      const headers: Record<string, string> = { ...options.headers }
+      if (!IS_TAURI) Object.assign(headers, BROWSER_ACCESS_HEADERS)
       const provider = createAnthropic({
         apiKey: config.apiKey,
         baseURL: resolveEndpoint(options.baseURL, config),
-        fetch: runtime.fetch,
-        headers: IS_TAURI ? undefined : BROWSER_ACCESS_HEADERS
+        headers,
+        fetch: runtime.fetch
       })
       return provider(config.customModelID.trim() || config.modelID)
     }

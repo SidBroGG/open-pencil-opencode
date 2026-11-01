@@ -95,6 +95,8 @@ const groups = computed(() => {
       (provider) =>
         // Signing in returns to a port on this computer, which only the desktop app can open.
         (IS_TAURI || !provider.signInOnly) &&
+        // The provider sends no CORS headers, so a browser request could never reach it.
+        (IS_TAURI || !provider.desktopOnly) &&
         // Cloud's AI service is offered while the Home server has one, and kept when chosen.
         (provider.id !== OPENPENCIL_AI_PROVIDER ||
           cloudAIAvailable.value ||

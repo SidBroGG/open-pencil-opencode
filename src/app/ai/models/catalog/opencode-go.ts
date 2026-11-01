@@ -1,15 +1,16 @@
 import { uniq } from 'es-toolkit/array'
 import * as v from 'valibot'
 
-import { AI_PROVIDERS, REASONING_EFFORTS } from '@open-pencil/core/constants'
-import type { ModelOption, ReasoningEffort } from '@open-pencil/core/constants'
+import { AI_PROVIDERS, MODEL_REASONING_LEVELS } from '@open-pencil/core/constants'
+import type { ModelOption, ModelReasoningLevel } from '@open-pencil/core/constants'
 
 import { modelOptionsSchema } from '@/app/ai/models/catalog/schema'
 import { OPENCODE_GO_BASE_URL } from '@/app/ai/providers/opencode-go/model'
 import { cachedRemoteJSON } from '@/app/cache/remote'
 
 const MODELS_URL = `${OPENCODE_GO_BASE_URL}/v1/models`
-const MODELS_CACHE_KEY = 'opencode-go/models'
+// A new key, so a list cached before efforts and image input were read is fetched again.
+const MODELS_CACHE_KEY = 'opencode-go/models-v2'
 const MODELS_CACHE_TTL_MS = 24 * 60 * 60 * 1000
 // The picker waits for this list, so a stalled request falls back to the curated models.
 const MODELS_TIMEOUT_MS = 10_000
@@ -29,6 +30,16 @@ const modelEntrySchema = v.looseObject({
   slug: v.optional(v.unknown()),
   name: v.optional(v.unknown()),
   display_name: v.optional(v.unknown()),
+  type: v.optional(v.unknown()),
+  // Go reports a model's abilities under `capabilities`, whose shape differs from models.dev.
+  capabilities: v.optional(
+    v.looseObject({
+      tools: v.optional(v.looseObject({ supported: v.optional(v.unknown()) })),
+      reasoning: v.optional(
+        v.looseObject({ supported: v.optional(v.unknown()), effort: v.optional(v.unknown()) })
+      )
+    })
+  ),
   tool_call: v.optional(v.unknown()),
   attachment: v.optional(v.unknown()),
   input_modalities: v.optional(v.unknown()),
@@ -60,21 +71,32 @@ function entriesOf(value: v.InferOutput<typeof modelsResponseSchema>): unknown[]
   return value.models
 }
 
-/** The efforts a provider lists, in the order the app offers them; `max` means `xhigh`. */
-function effortValues(value: unknown): ReasoningEffort[] {
-  if (!Array.isArray(value)) return []
-  const mapped = value.flatMap((entry): ReasoningEffort[] => {
+/** The names a provider uses for a level the app spells differently. */
+const PROVIDER_EFFORT_NAMES: Record<string, ModelReasoningLevel> = {
+  max: 'xhigh',
+  none: 'off'
+}
+
+/**
+ * The levels a provider lists, lowest first: Go says `max` for `xhigh` and `none` for `off`, and
+ * a family that reports `none` accepts reasoning turned off entirely.
+ */
+function effortValues(value: unknown): ModelReasoningLevel[] {  if (!Array.isArray(value)) return []
+  const mapped = value.flatMap((entry): ModelReasoningLevel[] => {
     if (typeof entry !== 'string') return []
-    const name = entry.toLowerCase() === 'max' ? 'xhigh' : entry.toLowerCase()
-    const matched = REASONING_EFFORTS.find((effort) => effort === name)
+    const name = entry.toLowerCase()
+    const spelled = PROVIDER_EFFORT_NAMES[name] ?? name
+    const matched = MODEL_REASONING_LEVELS.find((level) => level === spelled)
     return matched ? [matched] : []
   })
   return uniq(mapped).sort(
-    (left, right) => REASONING_EFFORTS.indexOf(left) - REASONING_EFFORTS.indexOf(right)
+    (left, right) => MODEL_REASONING_LEVELS.indexOf(left) - MODEL_REASONING_LEVELS.indexOf(right)
   )
 }
 
-function listedEfforts(entry: ModelEntry): ReasoningEffort[] {
+function listedEfforts(entry: ModelEntry): ModelReasoningLevel[] {
+  const reported = effortValues(entry.capabilities?.reasoning?.effort)
+  if (reported.length) return reported
   const direct = effortValues(entry.supported_efforts)
   if (direct.length) return direct
   if (Array.isArray(entry.reasoning_options)) {
@@ -96,11 +118,19 @@ function inputModalities(entry: ModelEntry): unknown[] {
   return Array.isArray(input) ? input : []
 }
 
+/** Go lists image input as MIME types, and a plain `image` entry from another catalog counts too. */
+function acceptsImages(entry: ModelEntry): boolean {
+  if (entry.attachment === true) return true
+  return inputModalities(entry).some(
+    (modality) => typeof modality === 'string' && (modality === 'image' || modality.startsWith('image/'))
+  )
+}
+
 /** Go is a coding catalog, so a model counts as tool-capable unless it says otherwise. */
 function capabilitiesOf(entry: ModelEntry): ('tools' | 'vision')[] {
-  const tools: ('tools' | 'vision')[] = entry.tool_call === false ? [] : ['tools']
-  const vision = entry.attachment === true || inputModalities(entry).includes('image')
-  return vision ? [...tools, 'vision'] : tools
+  const tools: ('tools' | 'vision')[] =
+    entry.tool_call === false || entry.capabilities?.tools?.supported === false ? [] : ['tools']
+  return acceptsImages(entry) ? [...tools, 'vision'] : tools
 }
 
 function outputTokensOf(entry: ModelEntry): number | undefined {
@@ -111,6 +141,8 @@ function outputTokensOf(entry: ModelEntry): number | undefined {
 
 export function normalizeOpenCodeGoModel(value: unknown): ModelOption | null {
   if (!v.is(modelEntrySchema, value)) return null
+  // The list also carries image and decision models, which a chat profile cannot run.
+  if (isName(value.type) && value.type !== 'chat') return null
   const id = [value.id, value.slug].find(isName)
   if (!id) return null
 

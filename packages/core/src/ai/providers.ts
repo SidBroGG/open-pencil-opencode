@@ -78,6 +78,13 @@ export type AIProviderID =
 export const REASONING_EFFORTS = ['minimal', 'low', 'medium', 'high', 'xhigh'] as const
 export type ReasoningEffort = (typeof REASONING_EFFORTS)[number]
 
+/**
+ * Every level a provider may list for one model, lowest first. `off` is the level a model that
+ * accepts no reasoning reports, and `xhigh` is what providers call `max`.
+ */
+export const MODEL_REASONING_LEVELS = ['off', ...REASONING_EFFORTS] as const
+export type ModelReasoningLevel = (typeof MODEL_REASONING_LEVELS)[number]
+
 export interface ModelOption {
   id: string
   name: string
@@ -88,8 +95,8 @@ export interface ModelOption {
   status?: 'active' | 'beta' | 'deprecated'
   /** Lowest reasoning effort the model accepts; lower thinking levels, Off included, use it. */
   minReasoningEffort?: ReasoningEffort
-  /** Every reasoning effort the model accepts, when the provider says more than its floor. */
-  efforts?: readonly ReasoningEffort[]
+  /** Every level the model accepts, when the provider lists more than its floor. */
+  efforts?: readonly ModelReasoningLevel[]
 }
 
 export interface AIProviderDef {
@@ -103,6 +110,8 @@ export interface AIProviderDef {
   supportsCustomModel?: boolean
   /** The credential comes from signing in to an account; there is no key to paste. */
   signInOnly?: boolean
+  /** The provider sends no CORS headers, so only the desktop shell can reach it. */
+  desktopOnly?: boolean
 }
 
 const OPENAI_MODELS: ModelOption[] = [
@@ -133,7 +142,8 @@ const OPENCODE_GO_MODELS: ModelOption[] = [
     id: 'deepseek-v4.1-flash',
     name: 'DeepSeek V4.1 Flash',
     tag: 'Best value',
-    capabilities: ['tools']
+    capabilities: ['tools', 'vision'],
+    efforts: ['low', 'high', 'xhigh']
   },
   {
     id: 'gpt-6-luna',
@@ -407,6 +417,8 @@ export const AI_PROVIDERS: AIProviderDef[] = [
     keyPlaceholder: 'oc_sk-…',
     keyURL: 'https://opencode.ai/console',
     defaultModel: 'deepseek-v4.1-flash',
+    // Its preflight answers 404 without `Access-Control-Allow-Origin`.
+    desktopOnly: true,
     models: OPENCODE_GO_MODELS
   },
   {
