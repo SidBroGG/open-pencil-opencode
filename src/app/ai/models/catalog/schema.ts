@@ -13,6 +13,7 @@ export const modelOptionsSchema = v.array(
     recommendedMaxOutputTokens: v.optional(v.number()),
     releaseDate: v.optional(v.string()),
     status: v.optional(v.picklist(['active', 'beta', 'deprecated'])),
-    minReasoningEffort: v.optional(v.picklist(REASONING_EFFORTS))
+    minReasoningEffort: v.optional(v.picklist(REASONING_EFFORTS)),
+    efforts: v.optional(v.array(v.picklist(REASONING_EFFORTS)))
   })
 ) satisfies v.GenericSchema<unknown, ModelOption[]>

@@ -149,6 +149,7 @@
   "chatModelNotFound": "Wybrany model jest niedostępny. Wybierz inny model w Ustawieniach.",
   "chatNetworkFailed": "OpenPencil nie mógł połączyć się z dostawcą. Sprawdź połączenie i endpoint.",
   "chatRateLimited": "Osiągnięto limit żądań dostawcy. Poczekaj chwilę i spróbuj ponownie.",
+  "chatUsageLimitReached": "Plan dostawcy osiągnął limit użycia. Spróbuj ponownie po jego odnowieniu.",
   "openProviderSettingsAction": "Otwórz ustawienia",
   "cloudWorkspace": "Obszar roboczy",
   "cloudWorkspaceHint": "Obszar roboczy, którego plan opłaca te żądania.",

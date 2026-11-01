@@ -11,6 +11,7 @@ import type { AIModelProfileDraft, AIModelCapability } from '@/app/ai/models'
 import { resolveModelsDevModel } from '@/app/ai/models/catalog'
 import { useProviderModelCatalog } from '@/app/ai/models/catalog/use'
 import { modelPickerOptions, type ModelPickerLabels } from '@/app/ai/models/picker/options'
+import { clampThinkingLevel } from '@/app/ai/models/reasoning/settings'
 import { supportsThinkingLevel } from '@/app/ai/models/thinking'
 import { OPENPENCIL_AI_PROVIDER } from '@/app/ai/providers/openpencil/provider'
 
@@ -78,6 +79,8 @@ export function useProfileModelSelection(
   const knownCapabilities = computed<AIModelCapability[]>(() => [
     ...(knownModel.value?.capabilities ?? ['tools'])
   ])
+  /** The efforts the model accepts, when its catalog lists them. */
+  const efforts = computed(() => knownModel.value?.efforts)
   const outputTokenRecommendation = computed(
     () => knownModel.value?.recommendedMaxOutputTokens ?? DEFAULT_MAX_OUTPUT_TOKENS
   )
@@ -123,6 +126,7 @@ export function useProfileModelSelection(
 
     draft.capabilities = [...knownCapabilities.value]
     draft.maxOutputTokens = outputTokenRecommendation.value
+    draft.thinkingLevel = clampThinkingLevel(draft.thinkingLevel, knownModel.value.efforts)
   }
 
   function updateProvider(providerID: AIProviderID): void {
@@ -188,6 +192,7 @@ export function useProfileModelSelection(
     selectedModelValue,
     knownModel,
     knownCapabilities,
+    efforts,
     outputTokenRecommendation,
     modelDisplayName,
     toolsEnabled,

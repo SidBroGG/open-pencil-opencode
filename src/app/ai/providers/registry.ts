@@ -9,6 +9,7 @@ import {
   createAnthropicCompatibleAdapter,
   createOpenAICompatibleAdapter
 } from '@/app/ai/providers/compatible'
+import { opencodeGoAdapter } from '@/app/ai/providers/opencode-go/adapter'
 import type { ModelProviderAdapter } from '@/app/ai/providers/types'
 
 type DirectProviderID = Exclude<AIProviderID, `acp:${string}` | `harness:${string}`>
@@ -42,6 +43,7 @@ const MODEL_PROVIDER_ADAPTERS = {
       return createDeepSeek({ apiKey: config.apiKey, fetch: runtime.fetch })(config.modelID)
     }
   },
+  'opencode-go': opencodeGoAdapter,
   zai: createAnthropicCompatibleAdapter({ baseURL: 'https://api.z.ai/api/anthropic' }),
   minimax: createOpenAICompatibleAdapter({ baseURL: 'https://api.minimax.io/v1', mode: 'chat' }),
   'openai-compatible': createOpenAICompatibleAdapter({

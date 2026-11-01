@@ -29,6 +29,7 @@ Możesz utworzyć kilka modeli i osobno przypisać je do projektowania, przeglą
 | **DeepSeek**           | DeepSeek Flash, DeepSeek V4 Pro                                        | Klucz API z [platform.deepseek.com](https://platform.deepseek.com/api_keys)                                |
 | **Z.ai**               | GLM-5.3, GLM-5.3-Flash, GLM-5.3-FlashX, GLM-5V-Turbo                   | Klucz API zgodnie z [dokumentacją Z.ai](https://docs.z.ai/devpack/quick-start)                             |
 | **MiniMax**            | MiniMax-M3.1-Flash, MiniMax-M3                                         | Klucz API z [platform.minimax.io](https://platform.minimax.io/user-center/basic-information/interface-key) |
+| **OpenCode Go**        | Grok, GPT, Claude, Kimi, GLM, DeepSeek, MiniMax i Qwen                 | Subskrypcja OpenCode Go i klucz API z [opencode.ai/console](https://opencode.ai/console)                  |
 | **Zgodny z OpenAI**    | Dowolny punkt końcowy w formacie OpenAI API                            | Własny adres bazowy i klucz; wybór Completions API lub Responses API                                       |
 | **Zgodny z Anthropic** | Dowolny punkt końcowy w formacie Anthropic API                         | Własny adres bazowy i klucz                                                                                |
 

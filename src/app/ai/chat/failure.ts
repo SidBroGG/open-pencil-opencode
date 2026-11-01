@@ -9,6 +9,7 @@ export type AIChatFailureReason =
   | 'network'
   | 'output-limit'
   | 'rate-limit'
+  | 'usage-limit'
   | 'request-failed'
   | 'sign-in-expired'
   | 'plan-forbidden'
@@ -85,7 +86,18 @@ function statusFailureReason(status: number | null): AIChatFailureReason | null 
   return null
 }
 
+/**
+ * OpenCode Go refuses with a 429 `GoUsageLimitError` once a plan window is spent, so it is a
+ * plan limit rather than the pacing every provider does.
+ */
+function isGoUsageLimitError(error: unknown): boolean {
+  if (providerErrorStatus(error) !== 429) return false
+  const text = normalizedErrorText(error)
+  return text.includes('gousagelimiterror') || text.includes('go usage limit')
+}
+
 function failureReason(error: unknown): AIChatFailureReason {
+  if (isGoUsageLimitError(error)) return 'usage-limit'
   const statusReason = statusFailureReason(providerErrorStatus(error))
   if (statusReason) return statusReason
   if (isInsufficientCreditError(error)) return 'insufficient-credit'

@@ -23,6 +23,8 @@ export type DirectAIModelRuntime = {
   role: ResolvedAIModelRole
   model: LanguageModel
   minReasoningEffort?: ReasoningEffort
+  /** Every effort the model accepts, when its provider lists more than the floor. */
+  efforts?: readonly ReasoningEffort[]
 }
 
 export type ACPModelRuntime = {
@@ -138,6 +140,7 @@ export async function createAIModelRuntime(role: AIModelRole): Promise<AIModelRu
     kind: 'direct',
     role: resolved,
     minReasoningEffort: known?.minReasoningEffort,
+    efforts: known?.efforts,
     model: createLanguageModel(
       {
         providerID: resolved.connection.providerID,

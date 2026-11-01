@@ -3,6 +3,7 @@ import * as v from 'valibot'
 import { AI_PROVIDERS, REASONING_EFFORTS } from '@open-pencil/core/constants'
 import type { AIProviderID, ModelOption, ReasoningEffort } from '@open-pencil/core/constants'
 
+import { opencodeGoModels } from '@/app/ai/models/catalog/opencode-go'
 import { modelOptionsSchema } from '@/app/ai/models/catalog/schema'
 import { cachedChatGPTModels } from '@/app/ai/providers/chatgpt/catalog'
 import { cachedRemoteJSON } from '@/app/cache/remote'
@@ -108,6 +109,7 @@ export async function listProviderModels(
   if (providerID === 'openrouter') {
     return (await openRouterModels.get(fetcher)) ?? curatedOpenRouterModels
   }
+  if (providerID === 'opencode-go') return opencodeGoModels(fetcher)
   // The picker fetches the account's list; a runtime reads that copy instead of asking again.
   if (providerID === 'chatgpt') {
     return (await cachedChatGPTModels()) ?? curatedProviderModels(providerID)

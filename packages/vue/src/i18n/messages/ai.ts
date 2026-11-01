@@ -229,6 +229,8 @@ export const aiMessageDefaults = {
   chatModelNotFound: 'The selected model is unavailable. Choose another model in Settings.',
   chatNetworkFailed: 'OpenPencil could not reach the provider. Check your connection and endpoint.',
   chatRateLimited: 'The provider rate limit was reached. Wait a moment and try again.',
+  chatUsageLimitReached:
+    'The provider plan has reached its usage limit. Try again when it resets.',
   chatRequestFailed: 'The model request failed. Check the provider settings and try again.',
   openProviderSettingsAction: 'Open settings',
   cloudWorkspace: 'Workspace',

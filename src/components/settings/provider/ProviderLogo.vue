@@ -11,6 +11,7 @@ import IconLMStudio from '~icons/ai/lmstudio'
 import IconMiniMax from '~icons/ai/minimax'
 import IconOllama from '~icons/ai/ollama'
 import IconOpenAI from '~icons/ai/openai'
+import IconOpenCode from '~icons/ai/opencode'
 import IconOpenRouter from '~icons/ai/openrouter'
 import IconZai from '~icons/ai/zai'
 import IconBot from '~icons/lucide/bot'
@@ -25,6 +26,7 @@ const LOGOS: Record<string, Component> = {
   chatgpt: IconOpenAI,
   google: IconGemini,
   openrouter: IconOpenRouter,
+  'opencode-go': IconOpenCode,
   deepseek: IconDeepSeek,
   zai: IconZai,
   minimax: IconMiniMax,

@@ -21,7 +21,7 @@ export const ONBOARDING_SUBSCRIPTIONS = ['chatgpt'] as const
 /** API accounts, in the order onboarding prefers them when several are available. */
 export const ONBOARDING_API_PROVIDERS = ['anthropic', 'openai', 'google', 'openrouter'] as const
 /** Further API accounts the catalog supports, offered behind "More providers". */
-export const ONBOARDING_MORE_API_PROVIDERS = ['deepseek', 'zai', 'minimax'] as const
+export const ONBOARDING_MORE_API_PROVIDERS = ['deepseek', 'opencode-go', 'zai', 'minimax'] as const
 /** A local model server or a company proxy that speaks the OpenAI API. */
 export const ONBOARDING_SERVER_PROVIDER = 'openai-compatible'
 /** One account for models from several vendors, recommended when no API account exists yet. */

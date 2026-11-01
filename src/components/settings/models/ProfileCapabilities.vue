@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import type { ReasoningEffort } from '@open-pencil/core/constants'
 import { useI18n } from '@open-pencil/vue/i18n'
 
 import type { AIModelCapability, HarnessPermissionMode, ThinkingLevel } from '@/app/ai/models'
@@ -20,6 +21,7 @@ const {
   detected,
   capabilities,
   outputTokens,
+  efforts,
   thinking = false,
   harness = false
 } = defineProps<{
@@ -27,6 +29,8 @@ const {
   detected: boolean
   capabilities: AIModelCapability[]
   outputTokens: number
+  /** The efforts the model accepts, when its catalog lists them. */
+  efforts?: readonly ReasoningEffort[]
   /** The provider takes a thinking level. */
   thinking?: boolean
   /** The model runs through the Pi companion, which asks which tools it may use. */
@@ -38,7 +42,7 @@ const thinkingLevel = defineModel<ThinkingLevel>('thinkingLevel', { required: tr
 const permissionMode = defineModel<HarnessPermissionMode>('permissionMode', { required: true })
 
 const { ai, common } = useI18n()
-const thinkingLevelOptions = computed(() => buildThinkingLevelOptions(ai.value))
+const thinkingLevelOptions = computed(() => buildThinkingLevelOptions(ai.value, efforts))
 const permissionOptions = computed(() => [
   { value: 'allow-reads', label: ai.value.harnessPermissionReads },
   { value: 'allow-edits', label: ai.value.harnessPermissionEdits },

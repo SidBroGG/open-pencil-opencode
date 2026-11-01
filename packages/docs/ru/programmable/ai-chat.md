@@ -29,6 +29,7 @@ description: Встроенный помощник с более чем 90 ин�
 | **DeepSeek**                | DeepSeek Flash, DeepSeek V4 Pro                                        | Ключ API с [platform.deepseek.com](https://platform.deepseek.com/api_keys)                                |
 | **Z.ai**                    | GLM-5.3, GLM-5.3-Flash, GLM-5.3-FlashX, GLM-5V-Turbo                   | Ключ API из [документации Z.ai](https://docs.z.ai/devpack/quick-start)                                    |
 | **MiniMax**                 | MiniMax-M3.1-Flash, MiniMax-M3                                         | Ключ API с [platform.minimax.io](https://platform.minimax.io/user-center/basic-information/interface-key) |
+| **OpenCode Go**             | Grok, GPT, Claude, Kimi, GLM, DeepSeek, MiniMax и Qwen                  | Подписка OpenCode Go и ключ API из [opencode.ai/console](https://opencode.ai/console)                     |
 | **Совместимый с OpenAI**    | Любая конечная точка в формате OpenAI API                              | Собственные базовый URL и ключ; можно выбрать Completions API или Responses API                           |
 | **Совместимый с Anthropic** | Любая конечная точка в формате Anthropic API                           | Собственные базовый URL и ключ                                                                            |
 

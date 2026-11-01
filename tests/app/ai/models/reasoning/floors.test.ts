@@ -61,6 +61,13 @@ describe('resolveProviderModel', () => {
     )
   })
 
+  test('reads OpenCode Go’s curated efforts when its live list is unavailable', async () => {
+    const fetcher = fetchStub(async () => new Response('', { status: 500 }))
+    expect(await resolveProviderModel('opencode-go', 'kimi-k3', fetcher)).toMatchObject({
+      efforts: ['low', 'high', 'xhigh']
+    })
+  })
+
   test('reads OpenRouter’s own model metadata', async () => {
     const fetcher = fetchStub(async () =>
       Response.json({

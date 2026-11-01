@@ -31,6 +31,7 @@ export const AI_PROVIDERS = [
   'chatgpt',
   'google',
   'deepseek',
+  'opencode-go',
   'openai-compatible',
   'zai',
   'minimax',

@@ -181,6 +181,8 @@ const failureMessage = computed(() => {
       return ai.value.chatOutputLimit
     case 'rate-limit':
       return ai.value.chatRateLimited
+    case 'usage-limit':
+      return ai.value.chatUsageLimitReached
     case 'request-failed':
       return ai.value.chatRequestFailed
     case 'sign-in-expired':

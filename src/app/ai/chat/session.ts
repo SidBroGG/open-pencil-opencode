@@ -225,6 +225,7 @@ export function createChatSessionManager({
         customModelID: runtime.role.profile.customModelID
       }),
       minReasoningEffort: runtime.minReasoningEffort,
+      efforts: runtime.efforts,
       maxOutputTokens: runtime.role.profile.maxOutputTokens,
       thinkingLevel: () => chatThinkingLevel.value,
       onError: captureProviderError,

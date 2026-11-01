@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
-import { chatThinkingLevel } from '@/app/ai/chat/thinking'
+import { chatThinkingEfforts, chatThinkingLevel } from '@/app/ai/chat/thinking'
 import { thinkingLevelLabel, thinkingLevelOptions } from '@/app/ai/models/thinking'
 import ChatThinkingMeter from '@/components/chat/ChatThinkingMeter.vue'
 import AppSelect from '@/components/ui/select/AppSelect.vue'
@@ -13,7 +13,7 @@ import { chatProfileTheme, chatThinkingTheme } from './ui'
 const { ai } = useI18n()
 const ui = chatProfileTheme()
 const thinking = chatThinkingTheme()
-const options = computed(() => thinkingLevelOptions(ai.value))
+const options = computed(() => thinkingLevelOptions(ai.value, chatThinkingEfforts.value))
 const selectedLabel = computed(() => thinkingLevelLabel(chatThinkingLevel.value, ai.value))
 </script>
 

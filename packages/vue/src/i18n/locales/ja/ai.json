@@ -155,6 +155,7 @@
   "chatModelNotFound": "選択したモデルは利用できません。設定で別のモデルを選択してください。",
   "chatNetworkFailed": "OpenPencilからプロバイダーに接続できませんでした。接続とエンドポイントを確認してください。",
   "chatRateLimited": "プロバイダーのリクエスト制限に達しました。少し待ってから再試行してください。",
+  "chatUsageLimitReached": "プロバイダーのプランが利用上限に達しました。リセット後にもう一度お試しください。",
   "openProviderSettingsAction": "設定を開く",
   "cloudWorkspace": "ワークスペース",
   "cloudWorkspaceHint": "これらのリクエストの料金を支払うプランのワークスペースです。",

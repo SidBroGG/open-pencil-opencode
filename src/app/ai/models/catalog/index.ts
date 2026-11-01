@@ -7,6 +7,7 @@ import type { AIProviderID, ModelOption } from '@open-pencil/core/constants'
 import { cachedRemoteJSON } from '@/app/cache/remote'
 
 import { listChatGPTModels } from './chatgpt'
+import { opencodeGoModels } from './opencode-go'
 
 const MODELS_DEV_URL = 'https://models.dev/api.json'
 const MODELS_DEV_CACHE_KEY = 'models-dev/catalog'
@@ -18,6 +19,7 @@ const PROVIDER_KEYS: Partial<Record<AIProviderID, readonly string[]>> = {
   openai: ['openai'],
   google: ['google'],
   deepseek: ['deepseek'],
+  'opencode-go': ['opencode-go'],
   zai: ['zhipuai'],
   minimax: ['minimax']
 }
@@ -141,6 +143,7 @@ export async function listCatalogModels(
   fetcher?: typeof fetch
 ): Promise<ModelOption[]> {
   const curated = curatedProviderModels(providerID)
+  if (providerID === 'opencode-go') return opencodeGoModels(fetcher)
   if (providerID === 'chatgpt') {
     const listed = await listChatGPTModels()
     return listed ? withCuratedNames(curated, listed) : curated

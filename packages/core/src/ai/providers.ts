@@ -66,6 +66,7 @@ export type AIProviderID =
   | 'chatgpt'
   | 'google'
   | 'deepseek'
+  | 'opencode-go'
   | 'openai-compatible'
   | 'zai'
   | 'minimax'
@@ -87,6 +88,8 @@ export interface ModelOption {
   status?: 'active' | 'beta' | 'deprecated'
   /** Lowest reasoning effort the model accepts; lower thinking levels, Off included, use it. */
   minReasoningEffort?: ReasoningEffort
+  /** Every reasoning effort the model accepts, when the provider says more than its floor. */
+  efforts?: readonly ReasoningEffort[]
 }
 
 export interface AIProviderDef {
@@ -118,6 +121,104 @@ const OPENAI_MODELS: ModelOption[] = [
     minReasoningEffort: 'low'
   },
   { id: 'gpt-6-luna', name: 'GPT-6 Luna', tag: 'Fast', capabilities: ['tools', 'vision'] }
+]
+
+/**
+ * OpenCode Go's curated catalog, the fallback when its live model list cannot be read and what
+ * guided setup offers. The live list adds models and refines each one's efforts; these entries
+ * name the ones worth recommending and the efforts OpenCode documents for their family.
+ */
+const OPENCODE_GO_MODELS: ModelOption[] = [
+  {
+    id: 'deepseek-v4.1-flash',
+    name: 'DeepSeek V4.1 Flash',
+    tag: 'Best value',
+    capabilities: ['tools']
+  },
+  {
+    id: 'gpt-6-luna',
+    name: 'GPT-6 Luna',
+    tag: 'Fast',
+    capabilities: ['tools', 'vision'],
+    efforts: ['minimal', 'low', 'medium', 'high']
+  },
+  {
+    id: 'gpt-5.6-luna',
+    name: 'GPT-5.6 Luna',
+    capabilities: ['tools', 'vision'],
+    efforts: ['minimal', 'low', 'medium', 'high']
+  },
+  {
+    id: 'grok-4.7',
+    name: 'Grok 4.7',
+    tag: 'Reasoning',
+    capabilities: ['tools', 'vision'],
+    efforts: ['low', 'medium', 'high']
+  },
+  {
+    id: 'claude-sonnet-5-5',
+    name: 'Claude Sonnet 5.5',
+    tag: 'Best for design',
+    capabilities: ['tools', 'vision'],
+    efforts: ['low', 'medium', 'high']
+  },
+  {
+    id: 'claude-haiku-5-5',
+    name: 'Claude Haiku 5.5',
+    tag: 'Fast',
+    capabilities: ['tools', 'vision'],
+    efforts: ['low', 'medium', 'high']
+  },
+  {
+    id: 'kimi-k3',
+    name: 'Kimi K3',
+    tag: 'Vision + code',
+    capabilities: ['tools', 'vision'],
+    efforts: ['low', 'high', 'xhigh']
+  },
+  {
+    id: 'kimi-k3.1-pro',
+    name: 'Kimi K3.1 Pro',
+    capabilities: ['tools', 'vision'],
+    efforts: ['low', 'high', 'xhigh']
+  },
+  { id: 'kimi-k2.7-code', name: 'Kimi K2.7 Code', capabilities: ['tools'] },
+  {
+    id: 'glm-5.3',
+    name: 'GLM-5.3',
+    capabilities: ['tools'],
+    efforts: ['low', 'medium', 'high']
+  },
+  {
+    id: 'glm-5.3-flash',
+    name: 'GLM-5.3-Flash',
+    tag: 'Fast',
+    capabilities: ['tools', 'vision'],
+    efforts: ['low', 'medium', 'high']
+  },
+  { id: 'glm-5.2', name: 'GLM-5.2', capabilities: ['tools'] },
+  {
+    id: 'minimax-m3.1-flash',
+    name: 'MiniMax M3.1 Flash',
+    capabilities: ['tools'],
+    efforts: ['low', 'medium', 'high']
+  },
+  {
+    id: 'minimax-m3',
+    name: 'MiniMax M3',
+    capabilities: ['tools'],
+    efforts: ['low', 'medium', 'high']
+  },
+  { id: 'mimo-v2.6-pro', name: 'MiMo V2.6 Pro', capabilities: ['tools'] },
+  { id: 'mimo-v2.6-flash', name: 'MiMo V2.6 Flash', tag: 'Fast', capabilities: ['tools'] },
+  { id: 'qwen3.8-max', name: 'Qwen3.8 Max', capabilities: ['tools', 'vision'] },
+  { id: 'qwen3.8-flash', name: 'Qwen3.8 Flash', capabilities: ['tools', 'vision'] },
+  {
+    id: 'gemini-4-argon',
+    name: 'Gemini 4 Argon',
+    tag: 'Vision',
+    capabilities: ['tools', 'vision']
+  }
 ]
 
 export const HARNESS_PROVIDER_ID = 'harness:pi' as const
@@ -299,6 +400,14 @@ export const AI_PROVIDERS: AIProviderDef[] = [
       { id: 'deepseek-flash', name: 'DeepSeek Flash', tag: 'Fast' },
       { id: 'deepseek-v4-pro', name: 'DeepSeek V4 Pro', tag: 'Reasoning' }
     ]
+  },
+  {
+    id: 'opencode-go',
+    name: 'OpenCode Go',
+    keyPlaceholder: 'oc_sk-…',
+    keyURL: 'https://opencode.ai/console',
+    defaultModel: 'deepseek-v4.1-flash',
+    models: OPENCODE_GO_MODELS
   },
   {
     id: 'zai',

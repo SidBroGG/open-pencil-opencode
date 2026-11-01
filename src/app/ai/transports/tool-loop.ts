@@ -38,6 +38,7 @@ export type ToolLoopTransportOptions = {
   model: LanguageModel
   effectiveModelID: string
   minReasoningEffort?: ReasoningEffort
+  efforts?: readonly ReasoningEffort[]
   maxOutputTokens: number
   /** Read per request, so the composer's level applies to the next message. */
   thinkingLevel: () => ThinkingLevel
@@ -57,12 +58,14 @@ function callSettings(
   providerID: AIProviderID,
   cacheOptions: AIProviderOptions | undefined,
   thinkingLevel: ThinkingLevel,
-  minReasoningEffort: ReasoningEffort | undefined
+  minReasoningEffort: ReasoningEffort | undefined,
+  efforts: readonly ReasoningEffort[] | undefined
 ) {
   const { reasoning, providerOptions } = reasoningCallSettings(
     providerID,
     thinkingLevel,
-    minReasoningEffort
+    minReasoningEffort,
+    efforts
   )
   // OpenRouter reads caching and reasoning from the same namespace, so merge them per key.
   const merged =
@@ -78,6 +81,7 @@ export function createToolLoopTransport({
   model,
   effectiveModelID,
   minReasoningEffort,
+  efforts,
   maxOutputTokens,
   thinkingLevel,
   onError,
@@ -132,7 +136,13 @@ export function createToolLoopTransport({
         stopWhen: [stepCountIs(currentRun(store).maxSteps), () => yieldWhen()],
         tools: offered,
         maxOutputTokens,
-        ...callSettings(providerID, cacheProviderOptions, thinkingLevel(), minReasoningEffort)
+        ...callSettings(
+          providerID,
+          cacheProviderOptions,
+          thinkingLevel(),
+          minReasoningEffort,
+          efforts
+        )
       }
     },
     onFinish: () => {

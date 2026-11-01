@@ -19,7 +19,7 @@ Plusieurs profils peuvent être enregistrés et attribués séparément au desig
 
 ## Fournisseurs
 
-OpenPencil prend en charge les connexions compatibles avec OpenAI et Anthropic, ainsi qu’OpenRouter, Google, Z.ai et des fournisseurs locaux.
+OpenPencil prend en charge les connexions compatibles avec OpenAI et Anthropic, ainsi qu’OpenRouter, Google, Z.ai, OpenCode Go et des fournisseurs locaux.
 
 Aucun serveur intermédiaire n’est utilisé. Les requêtes sont envoyées directement au fournisseur ; dans le navigateur, ses règles CORS s’appliquent. La fiabilité des appels d’outils en diffusion continue peut varier selon les déploiements. Consultez la [compatibilité BYOK](/programmable/byok-provider-compatibility).
 

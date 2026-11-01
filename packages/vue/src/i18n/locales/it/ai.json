@@ -155,6 +155,7 @@
   "chatModelNotFound": "Il modello selezionato non è disponibile. Scegli un altro modello nelle Impostazioni.",
   "chatNetworkFailed": "OpenPencil non ha raggiunto il provider. Controlla connessione ed endpoint.",
   "chatRateLimited": "È stato raggiunto il limite di richieste del provider. Attendi e riprova.",
+  "chatUsageLimitReached": "Il piano del provider ha raggiunto il limite di utilizzo. Riprova quando si azzera.",
   "openProviderSettingsAction": "Apri impostazioni",
   "cloudWorkspace": "Area di lavoro",
   "cloudWorkspaceHint": "L’area di lavoro il cui piano paga queste richieste.",

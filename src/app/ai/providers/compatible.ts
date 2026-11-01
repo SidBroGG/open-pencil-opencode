@@ -13,7 +13,8 @@ export type CompatibleEndpoint = string | ((config: ModelConfig) => string)
 
 type OpenAICompatibleOptions = {
   baseURL?: CompatibleEndpoint
-  mode?: 'default' | 'chat' | 'configurable'
+  /** `configurable` follows the profile's API type, so a server offers both endpoints. */
+  mode?: 'default' | 'chat' | 'responses' | 'configurable'
 }
 
 type AnthropicCompatibleOptions = {
@@ -36,6 +37,7 @@ export function createOpenAICompatibleAdapter(
       })
       const modelID = config.customModelID.trim() || config.modelID
       if (options.mode === 'chat') return provider.chat(modelID)
+      if (options.mode === 'responses') return provider.responses(modelID)
       if (options.mode === 'configurable') {
         return config.customAPIType === 'responses'
           ? provider.responses(modelID)

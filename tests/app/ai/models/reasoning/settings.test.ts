@@ -24,6 +24,22 @@ describe('reasoningCallSettings', () => {
     })
   })
 
+  test('takes the nearest effort a model lists', () => {
+    expect(reasoningCallSettings('opencode-go', 'off', undefined, ['low', 'high'])).toEqual({
+      reasoning: 'low'
+    })
+    expect(reasoningCallSettings('opencode-go', 'minimal', undefined, ['low', 'high'])).toEqual({
+      reasoning: 'low'
+    })
+    expect(reasoningCallSettings('opencode-go', 'xhigh', undefined, ['low', 'high'])).toEqual({
+      reasoning: 'high'
+    })
+    expect(
+      reasoningCallSettings('opencode-go', 'medium', undefined, ['low', 'medium', 'high'])
+    ).toEqual({ reasoning: 'medium' })
+    expect(reasoningCallSettings('opencode-go', 'default', undefined, ['low'])).toEqual({})
+  })
+
   test('applies a runtime’s floor to its own thinking level', () => {
     const runtime = {
       role: { connection: { providerID: 'openrouter' }, profile: { thinkingLevel: 'off' } },
@@ -32,5 +48,13 @@ describe('reasoningCallSettings', () => {
     expect(runtimeReasoningSettings(runtime)).toEqual({
       providerOptions: { openrouter: { reasoning: { effort: 'low' } } }
     })
+  })
+
+  test('clamps a runtime’s level to the efforts its model lists', () => {
+    const runtime = {
+      role: { connection: { providerID: 'opencode-go' }, profile: { thinkingLevel: 'minimal' } },
+      efforts: ['low', 'high']
+    } as Pick<DirectAIModelRuntime, 'role' | 'minReasoningEffort' | 'efforts'>
+    expect(runtimeReasoningSettings(runtime)).toEqual({ reasoning: 'low' })
   })
 })

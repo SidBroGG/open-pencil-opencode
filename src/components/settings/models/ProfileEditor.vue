@@ -59,6 +59,7 @@ const {
   selectedModelValue,
   knownModel,
   knownCapabilities,
+  efforts,
   outputTokenRecommendation,
   modelDisplayName,
   hasExistingKey,
@@ -355,6 +356,7 @@ async function remove() {
             v-model:permission-mode="draft.harnessPermissionMode"
             :detected="knownModel !== null"
             :capabilities="knownCapabilities"
+            :efforts="efforts"
             :output-tokens="outputTokenRecommendation"
             :thinking="supportsThinking"
             :harness="isHarness"

@@ -19,7 +19,7 @@ Puoi salvare più profili e assegnarli separatamente a design, revisioni, attivi
 
 ## Provider
 
-OpenPencil supporta connessioni compatibili con OpenAI e Anthropic, oltre a OpenRouter, Google, Z.ai e provider locali.
+OpenPencil supporta connessioni compatibili con OpenAI e Anthropic, oltre a OpenRouter, Google, Z.ai, OpenCode Go e provider locali.
 
 Non usa un server intermedio. Le richieste vengono inviate direttamente al provider; nel browser si applicano le sue regole CORS. L’affidabilità delle chiamate agli strumenti in streaming può variare tra i deployment. Consulta la [compatibilità BYOK](/programmable/byok-provider-compatibility).
 

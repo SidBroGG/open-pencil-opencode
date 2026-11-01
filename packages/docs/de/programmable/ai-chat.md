@@ -29,6 +29,7 @@ Mehrere Modelle können getrennt für Gestaltung, Prüfung, schnelle Aufgaben un
 | **DeepSeek**             | DeepSeek Flash und DeepSeek V4 Pro                                        | API-Schlüssel von [platform.deepseek.com](https://platform.deepseek.com/api_keys)                                |
 | **Z.ai**                 | GLM-5.3, GLM-5.3-Flash, GLM-5.3-FlashX und GLM-5V-Turbo                   | API-Schlüssel laut [Z.ai-Dokumentation](https://docs.z.ai/devpack/quick-start)                                   |
 | **MiniMax**              | MiniMax-M3.1-Flash und MiniMax-M3                                         | API-Schlüssel von [platform.minimax.io](https://platform.minimax.io/user-center/basic-information/interface-key) |
+| **OpenCode Go**          | Grok, GPT, Claude, Kimi, GLM, DeepSeek, MiniMax und Qwen                  | OpenCode-Go-Abonnement und API-Schlüssel von [opencode.ai/console](https://opencode.ai/console)                  |
 | **OpenAI-kompatibel**    | Endpunkt im OpenAI-API-Format                                             | Eigene Basisadresse und Schlüssel                                                                                |
 | **Anthropic-kompatibel** | Endpunkt im Anthropic-API-Format                                          | Eigene Basisadresse und Schlüssel                                                                                |
 

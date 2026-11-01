@@ -83,7 +83,7 @@ See [File Format Reference](/reference/file-format) for details.
 
 Tools are defined once in `packages/core/src/tools/`, split by domain: read, create, modify, structure, variables, vector, analyze. Each tool has typed params and an `execute(figma, args)` function. Adapters convert them for:
 
-- **AI chat** — valibot schemas, multi-provider (Anthropic, OpenAI, Google AI, OpenRouter, compatible endpoints)
+- **AI chat** — valibot schemas, multi-provider (Anthropic, OpenAI, Google AI, OpenRouter, OpenCode Go, compatible endpoints)
 - **MCP server** — zod schemas, stdio + HTTP transports
 - **CLI** — available via the `eval` command, whose scripts get the `figma` Plugin API and the `openpencil` API
 
