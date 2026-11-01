@@ -96,7 +96,7 @@ describe('opencode go adapter', () => {
     expect(request.url).toBe('https://opencode.ai/inference/go/anthropic/v1/messages')
     expect(request.body).toMatchObject({
       model: 'claude-haiku-5-5',
-      thinking: { type: 'enabled' }
+      output_config: { effort: 'high' }
     })
     expect(request.headers['x-api-key']).toBe('oc_sk-test')
   })

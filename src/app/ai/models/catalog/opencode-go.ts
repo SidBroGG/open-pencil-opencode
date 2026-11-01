@@ -145,12 +145,11 @@ export function mergeOpenCodeGoModels(
   return listed.map((model) => {
     const known = curatedById.get(model.id)
     if (!known) return model
-    return {
-      ...model,
-      name: known.name,
-      ...(known.tag ? { tag: known.tag } : {}),
-      ...(model.efforts?.length || !known.efforts ? {} : { efforts: known.efforts })
-    }
+
+    const merged: ModelOption = { ...model, name: known.name }
+    if (known.tag) merged.tag = known.tag
+    if (!model.efforts?.length && known.efforts) merged.efforts = known.efforts
+    return merged
   })
 }
 
