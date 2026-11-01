@@ -1,0 +1,76 @@
+name: Build Windows
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Rust target to build.
+        required: true
+        default: x86_64-pc-windows-msvc
+        type: choice
+        options:
+          - x86_64-pc-windows-msvc
+          - aarch64-pc-windows-msvc
+      ref:
+        description: Branch, tag, or commit to build. Defaults to the ref this workflow runs on.
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-build-${{ inputs.target }}-${{ inputs.ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    name: Windows — ${{ inputs.target }}
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26.x
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ inputs.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: desktop -> target
+          key: ${{ inputs.target }}
+
+      - uses: ./.github/actions/setup-bun
+        with:
+          cache-scope: desktop
+
+      # Manual builds are unsigned and ship no updater artifact, so no signing key is needed.
+      # `beforeBuildCommand` in desktop/tauri.conf.json builds the frontend, its icons, and the menu.
+      - name: Build unsigned Windows bundles
+        shell: bash
+        run: |
+          bun tauri build \
+            --target "${{ inputs.target }}" \
+            --config '{"bundle":{"createUpdaterArtifacts":false}}' \
+            --no-sign \
+            --verbose
+
+      - name: List produced installers
+        shell: bash
+        run: find "desktop/target/${{ inputs.target }}/release/bundle" -type f \( -name '*.msi' -o -name '*.exe' \) -print
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: openpencil-windows-${{ inputs.target }}
+          path: |
+            desktop/target/${{ inputs.target }}/release/bundle/msi/*.msi
+            desktop/target/${{ inputs.target }}/release/bundle/nsis/*.exe
+          if-no-files-found: error
+          compression-level: 0
